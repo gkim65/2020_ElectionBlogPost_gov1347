@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## First Blog Post!
 
 You can use the [editor on GitHub](https://github.com/gkim65/2020_ElectionBlogPost_gov1347/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
