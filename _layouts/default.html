@@ -21,7 +21,7 @@
       <div class="inner">
         
         <div class="hero">
-          <img class="feature-img" src="{{ 'assets/home-feature.jpg' | relative_url }}" />
+          {{ page.hero_text }}
         </div>
         <a href="{{ '/' | absolute_url }}">
           <h1>{{ site.title | default: site.github.repository_name }}</h1>
