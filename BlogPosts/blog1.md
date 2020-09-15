@@ -12,5 +12,11 @@ Tracking presidential vote share data from 1928-2016, it’s clear that the poll
 ![Figure 4: Popular Vote Table - Close Years](../Rplots/week1/output.png)
 ![Figure 5: Electoral College Table - Close Years](../Rplots/week1/electoral.png)
 ![Figure 6: Voter Turnout](../Rplots/week1/VoterTurnout_states_2016.png)
+![](../Rplots/week1/PV_national_historical.png)
+![](../Rplots/week1/PV_states_historical.png)
+![](../Rplots/week1/EC_states_historical.png)
+![](../Rplots/week1/output.png)
+![](../Rplots/week1/electoral.png)
+![](../Rplots/week1/VoterTurnout_states_2016.png)
 
 However, as we get closer to the present, the margin of victory over the popular vote appears to be decreasing. This suggests that party identification seems to play a larger influence on each individual’s voting preference for the presidency. Due to these changes, there can be some unforeseen changes within the relationships we see between the electoral college and the popular vote when the popular vote win ratios are on the much smaller side.
