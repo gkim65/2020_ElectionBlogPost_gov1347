@@ -65,7 +65,7 @@ Something that I haven't told you is that despite all of those fancy numbers abo
 
 Take a look at the voter turnout rates from the past 2016 election.
 
-<img src="../Rplots/week1/VoterTurnout_states_2016.png" width="200">
+<img src="../Rplots/week1/VoterTurnout_states_2016.png">
 [Figure 6: Voter Turnout](../Rplots/week1/VoterTurnout_states_2016.png)
 
 Most states didn't reach the full 100% of voter participation from all eligible voters. A good number of states didn't even reach 50% of voter participation from all eligible voters!
