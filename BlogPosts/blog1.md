@@ -52,7 +52,7 @@ Now, take a look at the table below. This table has the same years as before (ex
 
 However, now take a look at the Electoral College Vote Table.
 
-<img src="../Rplots/week1/electoral.png" width="400" height="400">
+<img src="../Rplots/week1/electoral.png" width="350" height="400">
 [Figure 5: Electoral College Table - Close Years](../Rplots/week1/electoral.png)
 
 It doesn't accurately reflect the results for both the 2000, and the 2016 elections! It only accurately reflected the 2004 election for Bush. This causes some large disconnections within the popular vote and the electoral college, as candidates who have voter support concentrated in a few states will ultimately lose to candidates who have more widespread support (but lower popular vote count) in multiple states.
