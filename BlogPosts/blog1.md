@@ -47,7 +47,7 @@ Now, take a look at the table below. This table has the same years as before (ex
 
 <img src="../Rplots/week1/output.png" alt="drawing" width="200"/>
 [Figure 4: Popular Vote Table - Close Years](../Rplots/week1/output.png)
-
+ 
 #### Electoral College Vote Table
 
 However, now take a look at the Electoral College Vote Table.
