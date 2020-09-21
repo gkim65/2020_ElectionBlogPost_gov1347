@@ -45,7 +45,7 @@ The differences between the popular vote state map and the electoral college sta
 
 Now, take a look at the table below. This table has the same years as before (except 1960 because of some missing data), and shows the Popular Vote count per election year for the Democratic and Republican parties. According to this popular vote count, it shows that in 2000 (D) Al Gore, 2004 (R) Bush, and 2016 (D) Clinton should have all respectively won their election.
 
-![](../Rplots/week1/output.png | width=350)
+![](../Rplots/week1/output.png | width=400)
 [Figure 4: Popular Vote Table - Close Years](../Rplots/week1/output.png)
  
 #### Electoral College Vote Table
@@ -65,7 +65,7 @@ Something that I haven't told you is that despite all of those fancy numbers abo
 
 Take a look at the voter turnout rates from the past 2016 election.
 
-![](../Rplots/week1/VoterTurnout_states_2016.png | width=350)
+![](../Rplots/week1/VoterTurnout_states_2016.png)
 [Figure 6: Voter Turnout](../Rplots/week1/VoterTurnout_states_2016.png)
 
 Most states didn't reach the full 100% of voter participation from all eligible voters. A good number of states didn't even reach 50% of voter participation from all eligible voters!
