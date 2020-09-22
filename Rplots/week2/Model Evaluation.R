@@ -41,7 +41,7 @@ economy_df <- read_csv("Data/econ.csv")
 popvote_df <- read_csv("Data/popvote_1948-2016.csv") 
 
 dat <- popvote_df %>% 
-  filter(incumbent == TRUE) %>%
+  filter(incumbent_party == TRUE) %>%
   select(year, winner, pv2p, party) %>%
   left_join(economy_df)
 
@@ -50,7 +50,7 @@ names(quarter.labs) <- c("1","2","3","4")
 
 ## scatterplot + line
 dat %>%
-  ggplot(aes(x=RDI, y=pv2p,
+  ggplot(aes(x=inflation, y=pv2p,
              label=year)) + 
   geom_label(aes(fill = factor(party)),
             colour = "white",
@@ -60,8 +60,8 @@ dat %>%
   scale_fill_manual(values = c("#007FFF", "#DC143C"), name = "")+
   geom_smooth(method="lm", formula = y ~ x, color = "#003466") +
   geom_hline(yintercept=50, lty=2) +
-  geom_vline(xintercept=7500, lty=2) + # median
-  xlab("RDI - Real Disposable Income") +
+  geom_vline(xintercept=median(dat$inflation), lty=2) + # median
+  xlab("Inflation Rates") +
   ylab("Incumbent party's national popular vote percentages") +
   theme_bw() +
   facet_wrap(~quarter, labeller  = labeller(quarter = quarter.labs)) +
@@ -77,7 +77,7 @@ ggsave("Inflation.png", height = 8, width = 8)
 ggsave("RDIGrowth.png", height = 8, width = 8)
 ggsave("RDI.png", height = 8, width = 8)
 ggsave("YearlyGDPGrowth.png", height = 8, width = 8)
-ggsave("QuarterlyGDPGrowth.png", height = 8, width = 8)
+ggsave("QuarterlyGDPGrowthIncumbentParty.png", height = 8, width = 8)
 
 dflist <- c("GDP", 
             "GDP_growth_qt", 
@@ -95,7 +95,7 @@ quarter_list <- c(1,2,3,4)
 dat<- popvote_df %>%
   filter(incumbent == TRUE) %>%
   select(year, winner, pv2p, party) %>%
-  left_join(economy_df %>% filter(quarter == 1))
+  left_join(economy_df)
 
 mse_df <- lapply(quarter_list, function(y){
   dat_q <- dat %>% filter(quarter == (y))
@@ -116,7 +116,7 @@ four_col <- as.data.frame(four_col)
 
 
 ft<- flextable(four_col %>% rownames_to_column("Economic Factor")) %>% 
-  add_header_lines("Mean Square Error Values Relating Economic Factors with Popular Vote in Election Year, Incumbent Party") %>% 
+  add_header_lines("Mean Square Error Values Relating Economic Factors with Popular Vote in Election Year, Incumbent Same-Party Heirs") %>% 
   font(fontname = "Garamond", part = "all") %>% 
   fontsize(i = NULL, j = NULL, size = 14, part = "header") %>% 
   align(align = "center", part = "all") %>% 
@@ -136,4 +136,4 @@ ft<- flextable(four_col %>% rownames_to_column("Economic Factor")) %>%
 
 ft
 flextable_dim(ft)
-save_as_image(x = ft, path = "MSE_Economy_ElectionYear.png")
+save_as_image(x = ft, path = "MSE_Economy_IncumbentParty.png")
