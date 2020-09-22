@@ -22,12 +22,12 @@ There are so many economic variables we could utilize to properly predict the po
 In order to find economic variables with the highest correlations with popular vote, I first plotted linear regression models relating popular vote data from the years of 1948-2016 with each economic variable. Each of the models look like the model below (Figure 1), with data from each quarter of the election year; this figure specifically is an example of popular vote plotted against Yearly GDP growth (which was calculated by finding the difference between the previous year’s quarter and the election year quarter).
 
 ![](../Rplots/week2/QuarterlyGDPGrowth.png)
-[Figure 1: Yearly GDP Growth VS Popular Vote](../Rplots/week2/QuarterlyGDPGrowth.png)
+[Figure 1: Quarterly GDP Growth VS Popular Vote](../Rplots/week2/QuarterlyGDPGrowth.png)
 
 Figure 1 is a great example of a *positive* correlation between the economy and the popular vote, as an increase within the quarterly GDP growth corresponds to a rise within the incumbent party’s national popular vote percentages.  There also can be models with *negative* correlations between economy and the popular vote, an example including inflation rates in Figure 2.
 
 ![](../Rplots/week2/Inflation.png)
-[Figure 2: Unemployment Rates VS Popular Vote](../Rplots/week2/Inflation.png)
+[Figure 2: Inflation VS Popular Vote](../Rplots/week2/Inflation.png)
 
 This figure doesn't necessarily represent a model with a very *high* negative correlation, but it does show us a negative relationship nevertheless.
 
@@ -66,6 +66,26 @@ This implies that for incumbent same-party heirs, voters are more likely to cons
 When we look at the MSE values for our incumbent presidents, we can see that some of the lowest MSE values have changed: the lowest MSE values have shifted to focus more on RDI - Real Disposable Income growth and unemployment rates. Another thing to note below in Figure 5 is that most of these MSE values are higher compared to the values from Figure 4. This utimately means that the models we have for sitting presidents have lower predictive accuracy rates than same-party heirs.
 
 ![](../Rplots/week2/MSE_Economy_IncumbentPres.png)
-[Figure 4: Mean Squared Error Table, Incumbent President ](../Rplots/week2/MSE_Economy_IncumbentPres.png)
+[Figure 5: Mean Squared Error Table, Incumbent President ](../Rplots/week2/MSE_Economy_IncumbentPres.png)
 
 The economic variables with the lowest MSE values for incumbent presidents were mostly centered around individual financial concerns for voters, which is a stark change from same-party heirs. Both RDI growth and unemployment rates are much more directly correlated to voters' financial stability, which indicates that voters use more of their personal experiences when judging the performance of incumbent presidents rather than the entire state of the country.
+
+### Predictions: President Trump's Popular Vote Percentages on Unemployment Rates
+
+Now utilizng the information we have from the previous Incumbent President's MSE values table in figure 5, we can try to predict President Trump's Popular Vote percentages utilizing this incumbent president data. We will be predicting the popular vote percentages for this election year from the unemployment rate data from quarter 2 and the RDI growth rates from quarter 1.
+
+From the unemployment data, with 2020's quarter 2 unemployment data equaling 13.0, we were able to find in Figure 6 that the predicted popular vote percentage for Trump was 42.3%.
+
+![](../Rplots/week2/unemploymentPredictionTrump.png)
+[Figure 6: Trump Predictions - Unemployment ](../Rplots/week2/unemploymentPredictionTrump.png)
+
+This can be seen from the significant drop from previous unemployment rates to the present day unemployment rates resulting from COVID-19.
+
+From the RDI growth rates data, with 2020's quarter 1 RDI growth rate data equaling 0.00636, we were able to find in Figure 7 that the predicted popular vote percentage for Trump was 55.5%.
+
+![](../Rplots/week2/RDI_GrowthPredictionTrump.png)
+[Figure 7: Trump Predictions - RDI Growth Rate ](../Rplots/week2/RDI_GrowthPredictionTrump.png)
+
+This may be due to the rise of RDI from stimulus checks provided by the government during the pandemic, which may not be completely representative of the entire situation currently in 2020.
+
+
