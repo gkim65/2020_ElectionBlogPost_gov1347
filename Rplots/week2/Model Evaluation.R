@@ -116,12 +116,12 @@ four_col <- as.data.frame(four_col)
 
 
 ft<- flextable(four_col %>% rownames_to_column("Economic Factor")) %>% 
-  add_header_lines("Mean Square Error Values Relating Economic Factors with Popular Vote in Election Year") %>% 
+  add_header_lines("Mean Square Error Values Relating Economic Factors with Popular Vote in Election Year, Incumbent Party") %>% 
   font(fontname = "Garamond", part = "all") %>% 
   fontsize(i = NULL, j = NULL, size = 14, part = "header") %>% 
   align(align = "center", part = "all") %>% 
   width(width = 1.5) %>% 
-  footnote(part = "body", i = c(5,10), j = 1,
+  footnote(part = "body", i = c(1,4), j = 1,
                    value = as_paragraph(
                      c("Gross Domestic Product",
                        "Real Disposable Income")
