@@ -7,7 +7,7 @@ One major factor that may influence a voter’s decision in an election is the s
 
 The economic factors that a voter utilizes to judge incumbent candidates can be either direct or indirect. For example, voters can react directly to an election cycle from the loss of their occupation, or base their vote on the country’s GDP (Gross Domestic Product) growth within the past few years. For this week’s blog post, we are using the economy as a proxy to describe how voters behave in elections, but in future blog posts we will need to find more direct variables that can measure specific experiences of voters (and possibly their final votes!).
 
-#### What correlations exist between the economy and popular vote?
+## What correlations exist between the economy and popular vote?
 
 There are so many economic variables we could utilize to properly predict the popular vote; some of these factors include (as previously mentioned):
 * GDP (Gross Domestic Product)
@@ -44,7 +44,7 @@ Figure 3 specifically focuses on the MSE values of economic variables measured d
 
 Utilizing these findings, we can continue similar analysis methods to see how the economy affects sitting presidents running for re-election compared to same-party heirs seeking the office.  
 
-#### Incumbent Same-Party Heirs Vs. Incumbent President... Is there a Difference?
+## Incumbent Same-Party Heirs Vs. Incumbent President... Is there a Difference?
 
 With all of this analysis with the economy and the popular vote, another question you may have is, *does the economy affect incumbent same-party heirs differently than the incumbent presidents running for office?*
 
@@ -61,7 +61,7 @@ When we look at the MSE values for our incumbent same-party heirs, some of the t
 
 This implies that for incumbent same-party heirs, voters are more likely to consider economic factors that are more sociotropic such as the GDP. Intuitively, it does make sense that voters would use information they have of how the previous incumbent party performed on the collective economic state of the country, as constituents have not had experience with these same-party heirs in office.
 
-#### Incumbent Presidents
+## Incumbent Presidents
 
 When we look at the MSE values for our incumbent presidents, we can see that some of the lowest MSE values have changed: the lowest MSE values have shifted to focus more on RDI - Real Disposable Income growth and unemployment rates. Another thing to note below in Figure 5 is that most of these MSE values are higher compared to the values from Figure 4. This utimately means that the models we have for sitting presidents have lower predictive accuracy rates than same-party heirs.
 

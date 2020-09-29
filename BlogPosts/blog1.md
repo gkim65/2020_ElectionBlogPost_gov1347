@@ -8,7 +8,7 @@ What do you think of when the months go by and we finally reach November? Thanks
 Personally, for me, November has been extra days off school, some thanksgiving KFC dinner with family, but also **elections**. Keeping up with the daily news on how each of the candidates are fighting on each state's polls has been pretty exciting for me; so for the year of 2020, I will be creating data visualizations and blog posts following the directions, twists, and turns of this presidential election!
 Now, lets begin the countdown to the election.
 
-#### Presidential Vote Share History
+## Presidential Vote Share History
 
 Tracking presidential vote share data from 1928-2016, it’s clear that the polls fluctuate widely year to year with the United States’ two-party system (Figure 1: Presidential Vote Share). A large chunk of voters do not seem to carry preferences towards specific parties during the presidential elections observing how easily the popular vote switches from party to party every 4 years. This is exhibited especially on the years of 1964 to 1972, where party preferences switched drastically from each election cycle.   
 
@@ -28,7 +28,7 @@ On the next few graphics, we will be looking at some of the data of the closest 
 
 Just looking at the figure map above, there doesn't seem to be anything too off with these graphs. If you want to know who won for each specific year, in the 1960 election the winner was (D) John F. Kennedy, 2000 and 2004 was (R) George W. Bush, and 2016 as you all should know was (R) Donald J. Trump.
 
-#### Popular Vote Win Margins
+## Popular Vote Win Margins
 
 Now having seen those, you would expect that the electoral college accurately reflected the majority of what the popular vote indicated as winners within this election; however, when we see the following graph, we might start doubting ourselves. This graph depicts the Popular Vote Win Margin percentages of each state with the appropriate color scale on the bottom.
 
@@ -48,7 +48,7 @@ Now, take a look at the table below. This table has the same years as before (ex
 <img src="../Rplots/week1/output.png" width="350">
 [Figure 4: Popular Vote Table - Close Years](../Rplots/week1/output.png)
  
-#### Electoral College Vote Table
+## Electoral College Vote Table
 
 However, now take a look at the Electoral College Vote Table.
 
