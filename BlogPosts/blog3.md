@@ -25,8 +25,8 @@ First, lets analyze and model the election using historical poll data from previ
 ![](../Rplots/week3/PopularVoteVSPolling.png)
 [Figure 2: Historical Election Data](../Rplots/week3/PopularVoteVSPolling.png)
 
-For the incumbent, every percentage increase in *avg_support* results in a *0.7294* increase in the popular vote. The results are seen to be statistically significant as the t-value is seen to be *6.966*, which is larger than 2 (the baseline acceptable value). The higher the t-value, we can have greater confidence in the coefficient we found to be a predictor.
+For the incumbent, every percentage increase in *avg_support* results in a **0.7294** increase in the popular vote. The results are seen to be statistically significant as the *t-value* is seen to be **6.966**, which is larger than 2 (the baseline acceptable value). The higher the t-value, we can have greater confidence in the coefficient we found to be a predictor.
 
-Now for the challenger, every percentage increase in *avg_support* results in a *0.4907* increase in the popular vote. The results are seen to be statistically significant as the t-value is seen to be *2.692*, but we do have a lower confidence value in this coefficient in predicting the challenger's popular vote based on polling information.
+Now for the challenger, every percentage increase in *avg_support* results in a **0.4907** increase in the popular vote. The results are seen to be statistically significant as the *t-value* is seen to be **2.692**, but we do have a lower confidence value in this coefficient in predicting the challenger's popular vote based on polling information.
 
 ## Economic or Poll Modeling?
