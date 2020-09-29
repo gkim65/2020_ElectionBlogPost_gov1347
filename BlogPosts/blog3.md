@@ -1,4 +1,4 @@
-# Blog 2: The Polls
+# Blog 3: The Polls
 ## 9/28/20
 
 ### Polling
@@ -46,7 +46,7 @@ However, using each passing day(or just time in general) as a variable to predic
 
 With the two datasets we explored previously, now lets try running out of sample testing runs for every single data point that are available to us. Running out of sample testing procedures for each data point allows us to find the average margin of polling error whenever we do create each of these models, and we can directly test how often we correctly predict the winners with each model. This gives us a better picture overall of whether or not our dataset is reliable enough for us to try and predict data points we don't have access to (such as the 2020 presidential election).
 
-<img src="../Rplots/week3/OutOfSampleTesting.png" width="350">
+<img src="../Rplots/week3/OutOfSampleTesting.png" width="400">
 [Figure 4: Out of Sample Testing Table](../Rplots/week3/OutOfSampleTesting.png)
 
 The historical election polling data seems much more reliable at predicting polling averages and winners for data outside of the sample, as poll margin errors were only **3.78%**. This historical data also correctly predicted **92%** of the winners of the out of sample testing which can be considered a high accuracy rate.
