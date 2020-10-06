@@ -42,16 +42,16 @@ Now these models show a much more different picture for Joe Biden. For Biden, ea
 
 However, using each passing day(or just time in general) as a variable to predict polling averages don't seem very convincing. Lets start looking at some ways to verify our data.
 
-### Out of Sample Testing
+### Out-of-Sample Testing
 
-With the two datasets we explored previously, now lets try running out of sample testing runs for every single data point that are available to us. Running out of sample testing procedures for each data point allows us to find the average margin of polling error whenever we do create each of these models, and we can directly test how often we correctly predict the winners with each model. This gives us a better picture overall of whether or not our dataset is reliable enough for us to try and predict data points we don't have access to (such as the 2020 presidential election).
+With the two datasets we explored previously, now lets try running out-of-sample testing runs for every single data point that are available to us. Running out-of-sample testing procedures for each data point allows us to find the average margin of polling error whenever we do create each of these models, and we can directly test how often we correctly predict the winners with each model. This gives us a better picture overall of whether or not our dataset is reliable enough for us to try and predict data points we don't have access to (such as the 2020 presidential election).
 
 <img src="../Rplots/week3/OutOfSampleTesting.png" width="400">
-[Figure 4: Out of Sample Testing Table](../Rplots/week3/OutOfSampleTesting.png)
+[Figure 4: Out-of-sample Testing Table](../Rplots/week3/OutOfSampleTesting.png)
 
-The historical election polling data seems much more reliable at predicting polling averages and winners for data outside of the sample, as poll margin errors were only **3.78%**. This historical data also correctly predicted **92%** of the winners of the out of sample testing which can be considered a high accuracy rate.
+The historical election polling data seems much more reliable at predicting polling averages and winners for data outside of the sample, as poll margin errors were only **3.78%**. This historical data also correctly predicted **92%** of the winners of the out-of-sample testing which can be considered a high accuracy rate.
 
-For the 2020 polling data, there are much more fluctuations throughout each day which left us with a much larger poll margin error of **15.5%**. Because the actual election results has not been determined yet, the percentage of correctness of 2020 out of sample testing was found through whether or not the predicted poll percentages were within 2% of actual recorded poll values. With these calculations, the models within out of sample testing were successful of determining poll averages **75%** of the time. This is a bit lower than the historical election polling data, but if we combine the two models together we can probably get a more accurate picture of how the 2020 elections might look.
+For the 2020 polling data, there are much more fluctuations throughout each day which left us with a much larger poll margin error of **15.5%**. Because the actual election results has not been determined yet, the percentage of correctness of 2020 out-of-sample testing was found through whether or not the predicted poll percentages were within 2% of actual recorded poll values. With these calculations, the models within out-of-sample testing were successful of determining poll averages **75%** of the time. This is a bit lower than the historical election polling data, but if we combine the two models together we can probably get a more accurate picture of how the 2020 elections might look.
 
 ## Final Predictions Using Polling Data!
 
