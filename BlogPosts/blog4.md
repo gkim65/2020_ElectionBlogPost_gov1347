@@ -45,8 +45,27 @@ None of the t values were over 2, and the only pvalues that were less than 0.05 
 
 ### Predictions?
 
-`
-`
+Now using the variables we found through the economy and incumbency analysis, we can run a multivariate regression model analysis to see the interactions of these various economy variables together. The following regression analysis was run:
+```
+  incumbent_mod <- lm(pv2p ~ GDP_growth_qt +
+                         GDP_growth_yr + 
+                         RDI_growth +
+                         GDP_growth_qt*GDP_growth_yr*RDI_growth, 
+                    data = dat_incumbent)
+```
+Where the interactions between GDP_growth_qt, GDP_growth_yr, and RDI_growth were specifically observed. With this model, we have some interesting estimates of Trump's popular vote predictions for this 2020 election.
+
+When using 2020 quarter 1 economy data, we get the following result:
+```
+      fit      lwr      upr
+  61.4618 43.83936 79.08424
+```
+This seems like a pretty high estimate: 61% of the popular vote, but when we compare this to the 2020 quarter 2 economy data we get an even more unrealistic result:
+```
+        fit       lwr      upr
+  -395.0764 -2037.667 1247.515
+```
+Again, this is popular vote estimates of Trump at -395% which indicates that this model most likely is not the most accurate in determining the popular vote percentages of Trump in the 2020 election. It seems like when we combine the interactions of the three variables we selected, the effect of each variable magnifies in the same direction which provides us these unrealistic results. We definitely should take this into consideration in the future.
 
 [^1]: Brown, A. R. (2014).Voters Don’t Care Much About Incumbency. Journal of Experimental Political Science, 1(2):132–143
 
