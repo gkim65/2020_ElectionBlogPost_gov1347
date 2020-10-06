@@ -27,32 +27,26 @@ There are very steady transitions within this graph, where the voters choose to 
 
 ### Economy and Incumbency
 
+Now, lets reexplore the Economy and Incumbency. When running lapply over all of the economic variables we have within our econ.csv dataset for only the incumbent candidates, we are able to get the following coefficients in Figure 3.
 
-![](../Rplots/week1/EC_states_historical.png)
-[Figure 3: Electoral College States Map](../Rplots/week1/EC_states_historical.png)
+![](../Rplots/week4/Coefficients_Incumbent.png)
+[Figure 3: Coefficient Incumbent](../Rplots/week4/Coefficients_Incumbent.png)
+
+The t-values with higher values than 2 are highlighted in red, which lets us know that the variables **GDP_growth_qr**, **GDP_growth_yr**, and **RDI_growth** are the most significant variables within this dataset that can model the number of popular votes the incumbent president would receive in an election. All three variables seem to have a positive correlation with popular vote, where one percentage increase in any of these would raise the percentages of the incumbent candidate's popular vote by 3.0% (GDP_growth_qr), 1.3% (GDP_growth_yr), and 2.4% (RDI_growth).
 
 ## Economy and Challengers
 
-![](../Rplots/week1/PV_states_historical.png)
-[Figure r: Popular Vote States Map](../Rplots/week1/PV_states_historical.png)
+Running this same procedure with the challengers data we have compared to the economic variables, we don't seem to identify any specific variables that could be accurate in predicting the popular vote for a challenger (Figure 4). 
 
+![](../Rplots/week4/Coefficients_Challenger.png)
+[Figure 4: Coefficient Challenger](../Rplots/week4/Coefficients_Challenger.png)
+
+None of the t values were over 2, and the only pvalues that were less than 0.05 were GDP_growth_qr and GDP_growth_yr. Unfortunately, we aren't able to get very significant conclusions from this analysis, so we will not be able to predict the percentages of the challenger using this model. However, we will use the three variables identified in the incumbency analysis with economy to see possible predictions for this year's election with Trump.
 
 ### Predictions?
 
-<img src="../Rplots/week1/output.png" width="350">
-[Figure 4: Popular Vote Table - Close Years](../Rplots/week1/output.png)
- 
-## Electoral College Vote Table
-
-
-<img src="../Rplots/week1/electoral.png" width="350">
-[Figure 5: Electoral College Table - Close Years](../Rplots/week1/electoral.png)
-
-### Incumbency Advantage
-
-![](../Rplots/week1/VoterTurnout_states_2016.png)
-[Figure 6: Voter Turnout](../Rplots/week1/VoterTurnout_states_2016.png)
-
+`
+`
 
 [^1]: Brown, A. R. (2014).Voters Don’t Care Much About Incumbency. Journal of Experimental Political Science, 1(2):132–143
 

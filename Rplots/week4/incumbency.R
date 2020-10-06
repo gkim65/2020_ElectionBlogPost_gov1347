@@ -109,13 +109,108 @@ ggsave("ChallengerVsIncumbent.png", height = 8, width = 8)
 economy_df <- read_csv("Data/econ.csv") 
 
 dat <- popvote_df %>% 
-  filter(prev_admin == TRUE) %>%
-  select(year, winner, pv2p, party) %>%
+#  filter(prev_admin == TRUE) %>%
+  select(year, winner, pv2p, party, incumbent_party) %>%
   left_join(economy_df %>% filter(quarter == 2))
 
+dat_incumbent <- dat %>% 
+  filter(incumbent_party == TRUE)
+dat_challenger <- dat %>% 
+  filter(incumbent_party == FALSE)
 
-mod_poll_Dem2020 <- lm(pct ~ end_date, data = dat_poll_Dem2020)
-mod_poll_Rep2020 <- lm(pct ~ end_date, data = dat_poll_Rep2020)
+dflist <- c("GDP", 
+            "GDP_growth_qt", 
+            "GDP_growth_yr", 
+            "RDI", 
+            "RDI_growth", 
+            "inflation",
+            "unemployment",
+            "stock_open",
+            "stock_close",
+            "stock_volume")
+
+
+mse_df <- lapply(dflist, function(x) {
+    lm_incumbent <- lm(pv2p ~ get(x), data = dat_challenger)
+    pv2p <- summary(lm_incumbent)$coefficients
+  })
+mse_df <- as.data.frame(do.call(rbind, mse_df))
+dflist2 <- c("GDP Intercepts", 
+            "GDP", 
+            "GDP_growth_qt Intercepts", 
+            "GDP_growth_qt", 
+            "GDP_growth_yr Intercepts", 
+            "GDP_growth_yr", 
+            "RDI Intercepts", 
+            "RDI", 
+            "RDI_growth Intercepts", 
+            "RDI_growth", 
+            "Inflation Intercepts",
+            "Inflation",
+            "Unemployment Intercepts",
+            "Unemployment",
+            "Stock_open Intercepts",
+            "Stock_open",
+            "Stock_close Intercepts",
+            "Stock_close",
+            "Stock_volume Intercepts",
+            "Stock_volume")
+
+rownames(mse_df) = dflist2
+toDelete <- seq(0, nrow(mse_df), 2)
+mse_df <- mse_df[ toDelete ,]
+
+ft<- flextable(mse_df %>% rownames_to_column("Economic Factor")) %>% 
+  add_header_lines("Coefficients Relating Economic Factors with Popular Vote in Election Year, Challenger") %>% 
+  font(fontname = "Garamond", part = "all") %>% 
+  fontsize(i = NULL, j = NULL, size = 14, part = "header") %>% 
+  align(align = "center", part = "all") %>% 
+  width(width = 1.5) %>% 
+  footnote(part = "body", i = c(1,4), j = 1,
+           value = as_paragraph(
+             c("Gross Domestic Product",
+               "Real Disposable Income")
+           )) %>% 
+  bold(i = 2, j = c(1,2)) %>% 
+  bold(i = 3, j = c(1,2))
+ft <- color(ft, i = ~ (`Pr(>|t|)`< 0.05), color = "red", j = 5 )
+
+save_as_image(x = ft, path = "Coefficients_Incumbent.png")
+save_as_image(x = ft, path = "Coefficients_Challenger.png")
+
+
+# challenger didn't have many good t values
+residuals_df <- lapply(dflist, function(x) {
+  lm_challenger <- lm(pv2p ~ get(x), data = dat_challenger)
+  pv2p <- mean(summary(lm_incumbent)$residuals)
+})
+residuals_df <- as.data.frame(do.call(rbind, residuals_df))
+
+
+incumbent_mod <- lm(pv2p ~ GDP_growth_qt +
+                         GDP_growth_yr + RDI_growth +
+                         GDP_growth_qt*GDP_growth_yr*RDI_growth, 
+                    data = dat_incumbent)
+
+dat_trump1 <- economy_df %>% 
+  subset(year == 2020 & quarter == 1) %>% 
+  select(GDP_growth_qt,GDP_growth_yr, RDI_growth)
+
+dat_trump2 <- economy_df %>% 
+  subset(year == 2020 & quarter == 2) %>% 
+  select(GDP_growth_qt,GDP_growth_yr, RDI_growth)
+
+trumpPrediction <- predict(incumbent_mod, dat_trump1,  
+                           interval = "prediction", level=0.95)
+trumpPrediction
+dat_trump<-dat_trump %>% add_column("year" = 2020,
+                                    "pv2p" = trumpPrediction,
+                                    "party" = "Republican")
+
+
+predict()
+summary(incumbent_mod)
+summary(challenger_mod)
 ## scatterplot + line
 dat %>%
   ggplot(aes(x=RDI_growth, y=pv2p,
