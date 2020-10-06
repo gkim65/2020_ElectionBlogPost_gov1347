@@ -63,46 +63,77 @@ ft <- flextable(incumbentPresidentW) %>%
 save_as_image(x = ft, path = "IncumbentPresW.png")
 
 ####----------------------------------------------------------#
-#### The relationship between economy and PV
 #### Incumbency Vs. Challengers
 ####----------------------------------------------------------#
-
-economy_df <- read_csv("Data/econ.csv") 
 
 dat <- popvote_df %>% 
   select(incumbent_party, pv2p,year,party) %>% 
   mutate(pv2p_incumbent = ifelse(incumbent_party == TRUE , pv2p, NA)) %>% 
   mutate(pv2p_challenger = ifelse(incumbent_party == FALSE , pv2p, NA)) %>% 
-  mutate(party_incumbent = ifelse(is.na(pv2p_incumbent), NA, party)) %>% 
-  mutate(party_challenger = ifelse(is.na(pv2p_challenger), NA, party)) %>% 
+  mutate(party_incumbent = ifelse(is.na(pv2p_incumbent) , NA, ifelse(party == "democrat", 0,1))) %>% 
+  mutate(party_challenger = ifelse(is.na(pv2p_challenger), NA, ifelse(party == "democrat", 0,1))) %>% 
   group_by(year) %>% 
-  summarise(pv2p_challenger = sum(pv2p_challenger, na.rm = T),
-            pv2p_incumbent = sum(pv2p_incumbent, na.rm = T),
-            party_challenger = ifelse(is.na(party_challenger), party_challenger, NA),
-            party_incumbent = ifelse(is.na(party_incumbent), party_incumbent, NA))
-
+  summarise_if(
+    is.numeric,
+    sum,
+    na.rm = TRUE
+  )
 
 ## scatterplot + line
-ggplot(dat, color = party) + 
+ggplot(dat, color = (party_incumbent)) + 
   geom_segment(aes(x=year, xend = year, y = pv2p_challenger, yend = pv2p_incumbent), color="gray")+
-  geom_point(aes(x=year, y = pv2p_incumbent), size=2, color = (dat$party_incumbent)) +
-  geom_point(aes(x=year, y = pv2p_challenger), size=2, color = (dat$party_challenger)) +
+  geom_point(aes(x=year, y = pv2p_incumbent), 
+             size=5, 
+             fill = ifelse(dat$party_incumbent == 0 , "#007FFF", "#DC143C"), 
+             color = ifelse(dat$party_incumbent == 0 , "#007FFF", "#DC143C"),
+             shape = 21, alpha = 0.75) +
+  geom_point(aes(x=year, 
+                 y = pv2p_challenger), 
+             fill = ifelse(dat$party_challenger == 0 , "#007FFF", "#DC143C"), 
+             color = ifelse(dat$party_challenger == 0 , c("#007FFF"), c("#DC143C")),
+             size=5,
+             shape = 24,alpha = 0.75) +
   theme_bw() +
+  labs(title = "Challenger VS Incumbent President/Party Popular Vote",
+       subtitle = "Triangle = Challenger, Circle = Incumbent")+
+  xlab("Years from 1948-2016") +
+  ylab("Popular Vote")+
   blogGraphics_theme
 
+ggsave("ChallengerVsIncumbent.png", height = 8, width = 8)
 
-  geom_label(aes(fill = factor(incumbent_party)),
+####----------------------------------------------------------#
+#### The relationship between economy and PV also incumbency
+####----------------------------------------------------------#
+
+economy_df <- read_csv("Data/econ.csv") 
+
+dat <- popvote_df %>% 
+  filter(prev_admin == TRUE) %>%
+  select(year, winner, pv2p, party) %>%
+  left_join(economy_df %>% filter(quarter == 2))
+
+
+mod_poll_Dem2020 <- lm(pct ~ end_date, data = dat_poll_Dem2020)
+mod_poll_Rep2020 <- lm(pct ~ end_date, data = dat_poll_Rep2020)
+## scatterplot + line
+dat %>%
+  ggplot(aes(x=RDI_growth, y=pv2p,
+             label=year)) + 
+  geom_label(aes(fill = factor(party)),
              colour = "white",
              fontface = "bold", 
              size = 4,
              alpha = 0.7) +
-#  geom_smooth(method="lm", formula = y ~ x, color = "#003466") +
-#  geom_hline(yintercept=50, lty=2) +
-#  geom_vline(xintercept=median(dat$RDI_growth), lty=2) + # median
+  scale_fill_manual(values = c("#007FFF", "#DC143C"), name = "")+
+  geom_smooth(method="lm", formula = y ~ x, color = "#003466") +
+  geom_hline(yintercept=50, lty=2) +
+  geom_vline(xintercept=median(dat$RDI_growth), lty=2) + # median
   xlab("RDI_growth") +
   ylab("Incumbent president's national popular vote percentages") +
-  #geom_segment(aes(x = year, y = pv2p, xend =year, yend = pv2p))+
-  geom_line()+
+  theme_bw() +
+  facet_wrap(~quarter, labeller  = labeller(quarter = quarter.labs)) +
+  blogGraphics_theme
 
 ggsave("GDP.png", height = 8, width = 8)
 ggsave("stockVolume.png", height = 8, width = 8)
