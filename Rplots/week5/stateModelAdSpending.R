@@ -8,192 +8,174 @@
 
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
 library(geofacet) ## map-shaped grid of ggplots
+library(usmap)
+library(extrafont)
+library(flextable)
+library(webshot)
+loadfonts(device = "win")
+
+
+## Made my pretty theme for my map graphics :D
+blogMapGraphics_theme <- theme(panel.border = element_blank(),
+                               text         = element_text(family = "Garamond"),
+                               plot.title   = element_text(size = 15, hjust = 0.5), 
+                               strip.text   = element_text(size = 18),
+                               plot.caption = element_text(size = 18),
+                               line = element_line(color= "white"),
+                               legend.position = "bottom",
+                               legend.direction = "horizontal",
+                               legend.text = element_text(size = 12))
 
 #####------------------------------------------------------#
 ##### Read and merge data ####
 #####------------------------------------------------------#
-ads_2020    <- read_csv("Data/ads_2020.csv")
+ads_campaigns    <- read_csv("Data/ad_campaigns_2000-2012.csv")
 
-
-pvstate_df    <- read_csv("Data/popvote_bystate_1948-2016.csv")
-economy_df    <- read_csv("Data/econ.csv")
 pollstate_df  <- read_csv("Data/pollavg_bystate_1968-2016.csv")
+
+# Get ad spending over time
+ads<-ads_campaigns %>% select(state, total_cost,party,air_date) %>% 
+  mutate(year = as.numeric(substr(air_date, 1, 4))) %>%
+  group_by(state, year, party) %>% 
+  summarize(total_cost = sum(total_cost)) %>% 
+  filter(!is.na(year))
+ads$state<-state.name[match(ads$state,state.abb)]
+
+# Merge ad spending data per state with poll data
+vep_df <- read_csv("Data/vep_1980-2020.csv")
+
+poll_pvstate_vep_df <- pvstate_df %>%
+  mutate(D_pv = D/total) %>%
+  inner_join(pollstate_df %>% filter(weeks_left == 5)) %>%
+  left_join(vep_df) %>% 
+  left_join(ads)
+poll_pvstate_vep_df$total_cost[is.na(poll_pvstate_vep_df$total_cost)] <- 0
+poll_pvstate_vep_df$VEP[is.na(poll_pvstate_vep_df$VEP)] <- 0;
+
+
+# NEED TO GET VALUES TO PREDICT 2020 DATA!
+# First get totals from both biden ads and trump ads
+biden_ads_2020 <- read_csv("Data/Biden_2020AdSpending.csv")
+trump_ads_2020 <- read_csv("Data/Trump_2020AdSpending.csv")
+
+bidenAds_clean <- biden_ads_2020 %>% 
+  select(recipient_state, disbursement_date,disbursement_amount) %>% 
+  group_by(recipient_state) %>%
+  summarise(total_cost = sum(disbursement_amount)) %>% 
+  mutate(party = "democrat")
+
+trumpAds_clean <- trump_ads_2020 %>% 
+  select(recipient_state, disbursement_date,disbursement_amount) %>% 
+  group_by(recipient_state) %>%
+  summarise(total_cost = sum(disbursement_amount)) %>% 
+  mutate(party = "republican")
+
+# bind the two data sets from trump and biden together
+AllAds <- rbind(trumpAds_clean, bidenAds_clean) %>% 
+  mutate(state = state.name[match(recipient_state,state.abb)]) %>% 
+  select(total_cost, party,state) %>% 
+  filter(!is.na(state))
+
+poll2020_df    <- read_csv("Data/president_polls_2020.csv")
+
+predictData_2020 <- poll2020_df %>% 
+  select(pct, state, candidate_party) %>% 
+  filter(!is.na(state), candidate_party == c("DEM" , "REP")) %>%
+  mutate(party = ifelse(candidate_party == "DEM" , "democrat", "republican")) %>% 
+  group_by(state, party) %>% 
+  summarize(avg_poll = mean(pct)) %>% 
+  full_join(AllAds) %>% 
+  mutate_all(~replace(., is.na(.), 0))
+  
 
 #####------------------------------------------------------#
 ##### Map of PROBABILISTIC univariate poll-based state forecasts ####
 #####------------------------------------------------------#
-vep_df <- read_csv("Data/vep_1980-2020.csv")
-poll_pvstate_vep_df <- pvstate_df %>%
-  mutate(D_pv = D/total) %>%
-  inner_join(pollstate_df %>% filter(weeks_left == 5)) %>%
-  left_join(vep_df)
-state_glm_forecast <- list()
-state_glm_forecast_outputs <- data.frame()
-poll_pvstate_vep_df$state_abb <- state.abb[match(poll_pvstate_vep_df$state, state.name)]
-for (s in unique(poll_pvstate_vep_df$state_abb)) {
-  
-  state_glm_forecast[[s]]$dat_D <- poll_pvstate_vep_df %>% 
-    filter(state_abb == s, party == "democrat")
-  state_glm_forecast[[s]]$mod_D <- glm(cbind(D, VEP - D) ~ avg_poll, 
-                                       state_glm_forecast[[s]]$dat_D,
-                                       family = binomial(link="logit"))
-  
-  state_glm_forecast[[s]]$dat_R <- poll_pvstate_vep_df %>% 
-    filter(state_abb == s, party == "republican")  
-  state_glm_forecast[[s]]$mod_R <- glm(cbind(R, VEP - R) ~ avg_poll, 
-                                       state_glm_forecast[[s]]$dat_R,
-                                       family = binomial(link="logit"))
-  
-  if (nrow(state_glm_forecast[[s]]$dat_R) > 2) {
-    for (hypo_avg_poll in seq(from=0, to=100, by=10)) {
-      Dpred_voteprob <- predict(state_glm_forecast[[s]]$mod_D, 
-                                newdata=data.frame(avg_poll=hypo_avg_poll), se=T, type="response")
-      Dpred_q <- qt(0.975, df = df.residual(state_glm_forecast[[s]]$mod_D)) ## used in pred interval formula
-      
-      Rpred_voteprob <- predict(state_glm_forecast[[s]]$mod_R, 
-                                newdata=data.frame(avg_poll=hypo_avg_poll), se=T, type="response")
-      Rpred_q <- qt(0.975, df = df.residual(state_glm_forecast[[s]]$mod_R)) ## used in pred interval formula
-      
-      state_glm_forecast_outputs <- rbind(
-        state_glm_forecast_outputs,
-        cbind.data.frame(state = s, party = "democrat", x = hypo_avg_poll, 
-                         y = Dpred_voteprob$fit*100, 
-                         ymin = (Dpred_voteprob$fit - Rpred_q*Dpred_voteprob$se.fit)*100,
-                         ymax = (Dpred_voteprob$fit + Rpred_q*Dpred_voteprob$se.fit)*100),
-        cbind.data.frame(state = s, party = "republican", x = hypo_avg_poll, 
-                         y = Rpred_voteprob$fit*100, 
-                         ymin = (Rpred_voteprob$fit - Rpred_q*Rpred_voteprob$se.fit)*100,
-                         ymax = (Rpred_voteprob$fit + Rpred_q*Rpred_voteprob$se.fit)*100)
-      )
-    }
-  }
-}
 
-## graphs: polls in different states / parties different levels 
-##         of strength / significance of outcome
-ggplot(state_glm_forecast_outputs, aes(x=x, y=y, ymin=ymin, ymax=ymax)) + 
-  facet_geo(~ state) +
-  geom_line(aes(color = party)) + 
-  geom_ribbon(aes(fill = party), alpha=0.5, color=NA) +
-  coord_cartesian(ylim=c(0, 100)) +
-  scale_color_manual(values = c("blue", "red")) +
-  scale_fill_manual(values = c("blue", "red")) +
-  xlab("hypothetical poll support") +
-  ylab('probability of state-eligible voter voting for party') +
-  theme_bw()
+# Get state list for lapply function
+stateList <- state.name
+stateList <- stateList[-45]
 
-## North Dakota and Texas
-state_glm_forecast_outputs %>%
-  filter(state == "ND" | state == "TX") %>%
-  ggplot(aes(x=x, y=y, ymin=ymin, ymax=ymax)) + 
-  facet_wrap(~ state) +
-  geom_line(aes(color = party)) + 
-  geom_ribbon(aes(fill = party), alpha=0.5, color=NA) +
-  coord_cartesian(ylim=c(0, 100)) +
-  geom_text(data = poll_pvstate_df %>% filter(state == "ND", party=="democrat"), 
-            aes(x = avg_poll, y = D_pv, ymin = D_pv, ymax = D_pv, color = party, label = year), size=1.5) +
-  geom_text(data = poll_pvstate_df %>% filter(state == "ND", party=="republican"), 
-            aes(x = avg_poll, y = D_pv, ymin = D_pv, ymax = D_pv, color = party, label = year), size=1.5) +
-  geom_text(data = poll_pvstate_df %>% filter(state == "TX", party=="democrat"), 
-            aes(x = avg_poll, y = D_pv, ymin = D_pv, ymax = D_pv, color = party, label = year), size=1.5) +
-  geom_text(data = poll_pvstate_df %>% filter(state == "TX", party=="republican"), 
-            aes(x = avg_poll, y = D_pv, ymin = D_pv, ymax = D_pv, color = party, label = year), size=1.5) +
-  scale_color_manual(values = c("blue", "red")) +
-  scale_fill_manual(values = c("blue", "red")) +
-  xlab("hypothetical poll support") +
-  ylab('probability of\nstate-eligible voter\nvoting for party') +
-  ggtitle("Binomial logit") + 
-  theme_bw() + theme(axis.title.y = element_text(size=6.5))
-
-#####------------------------------------------------------#
-##### Simulating a distribution of election results (PA) ####
-#####------------------------------------------------------#
-
-stateList <- vep_df %>% 
-  filter(year == 2020, state != "United States")%>% 
-  select(state)
-
-state_predictions_df <- lapply(stateList, function(y){
+  state_predictions_df <- lapply(stateList, function(y){
   ## Get relevant data
-  VEP_state_2020 <- as.integer(vep_df$VEP[vep_df$state == y & vep_df$year == 2020])
+  state_D <- poll_pvstate_vep_df %>% dplyr::filter(state  == y) %>% 
+    dplyr::filter(party=="democrat")
+  state_R <- poll_pvstate_vep_df %>% dplyr::filter(state  == y)%>% dplyr::filter(party=="republican")
   
-  state_R <- poll_pvstate_vep_df %>% filter(state==y, party=="republican")
-  state_D <- poll_pvstate_vep_df %>% filter(state==y, party=="democrat")
+  state_R_ads_glm <- glm(cbind(R, VEP-R) ~ avg_poll+total_cost, state_R, family = binomial)
+  state_D_ads_glm <- glm(cbind(D, VEP-D) ~ avg_poll+total_cost, state_D, family = binomial)
   
-  ## Fit D and R models
-  state_R_glm <- glm(cbind(R, VEP-R) ~ avg_poll, state_R, family = binomial)
-  state_D_glm <- glm(cbind(D, VEP-D) ~ avg_poll, state_D, family = binomial)
+  avg_poll_R <- predictData_2020 %>%
+    filter(state == y, party == "republican") %>%
+    select(avg_poll)
+  avg_poll_R <- avg_poll_R$avg_poll[[1]]
   
-  mse_df <- lapply(dflist, function(x) {
-    lm_econ <- lm(pv2p ~ get(x), data = dat_q)
-    mse <- mean((lm_econ$model$pv2p - lm_econ$fitted.values)^2)
-    pv2p <- sqrt(mse)
-  })
+  avg_poll_D <- predictData_2020 %>%
+    filter(state == y, party == "democrat") %>%
+    select(avg_poll)
+  avg_poll_D <- avg_poll_D$avg_poll[[1]]
+  
+  total_cost_R <- predictData_2020 %>%
+    filter(state == y, party == "republican") %>%
+    select(total_cost)
+  total_cost_R <- total_cost_R$total_cost[[1]]
+  
+  total_cost_D <- predictData_2020 %>%
+    filter(state == y, party == "democrat") %>%
+    select(total_cost)
+  total_cost_D <- total_cost_D$total_cost[[1]]
+  
+  prob_Dvote_2020 <- predict(state_D_ads_glm, newdata = data.frame(avg_poll=avg_poll_D, total_cost = total_cost_D), type="response")[[1]]
+  prob_Rvote_2020 <- predict(state_R_ads_glm, newdata = data.frame(avg_poll=avg_poll_R, total_cost = total_cost_R), type="response")[[1]]
+  
+  cbind.data.frame(y , prob_Dvote_2020 , prob_Rvote_2020)
+  
+  
+})
+  
+state_predictions_df_og <- do.call(rbind, state_predictions_df)
+state_predictions_df <- state_predictions_df_og %>% 
+  mutate(win_margin = ifelse(prob_Dvote_2020>=prob_Rvote_2020, "Democrat", "Republican")) %>% 
+  mutate(state = y) %>%
+  select(state,win_margin)
 
-## Get predicted draw probabilities for D and R
-prob_Rvote_PA_2020 <- predict(PA_R_glm, newdata = data.frame(avg_poll=44.5), type="response")[[1]]
-prob_Dvote_PA_2020 <- predict(PA_D_glm, newdata = data.frame(avg_poll=50), type="response")[[1]]
+state_predictions_df <- as.data.frame(state_predictions_df, col.names = c("win_margin", "state"))
 
-## Get predicted distribution of draws from the population
-sim_Rvotes_PA_2020 <- rbinom(n = 10000, size = VEP_PA_2020, prob = prob_Rvote_PA_2020)
-sim_Dvotes_PA_2020 <- rbinom(n = 10000, size = VEP_PA_2020, prob = prob_Dvote_PA_2020)
+electoralCollege <- read.csv("Data/ElectoralCollegePost1948.csv")
+electoralCollege %>% select(X,X2020) %>% 
+  filter(!is.na(X2020)) %>% 
+  mutate(state = X) %>% 
+  left_join(state_predictions_df) %>% 
+  filter(!is.na(win_margin)) %>%
+  group_by(win_margin) %>% 
+  summarize(X2020 = sum(X2020))
 
-## Simulating a distribution of election results: Biden PA PV
-hist(sim_Dvotes_PA_2020, xlab="predicted turnout draws for Biden\nfrom 10,000 binomial process simulations", breaks=100)
+plot_usmap(data = state_predictions_df, regions = "states", values = "win_margin", color = "white") +
+  scale_fill_manual(values = c("blue", "#DC143C"), name = "") + 
+  theme_void()+
+  labs(title = "Predicted 2020 Electoral College State Wins based on Campaign Ad Spending Model",
+       caption = "Joe Biden Electoral College Votes = 340
+       Donald Trump Electoral College Votes = 192") +
+  blogMapGraphics_theme +
+  theme(legend.position = "none")+
+ggsave("2020AdPrediction.png", height = 8, width = 8)
 
-## Simulating a distribution of election results: Trump PA PV
-hist(sim_Rvotes_PA_2020, xlab="predicted turnout draws for Trump\nfrom 10,000 binomial process simulations", breaks=100)
+## Win Margins table
+colnames(state_predictions_df_og) <- c("State", "Democrats Turnout", "Republican Turnout")
+state_predictions_df_og$`Republican Turnout` = round(state_predictions_df_og$`Republican Turnout`, 2)
+state_predictions_df_og$`Democrats Turnout` = round(state_predictions_df_og$`Democrats Turnout`, 2)
 
-## Simulating a distribution of election results: Biden win margin
-sim_elxns_PA_2020 <- ((sim_Dvotes_PA_2020-sim_Rvotes_PA_2020)/(sim_Dvotes_PA_2020+sim_Rvotes_PA_2020))*100
-hist(sim_elxns_PA_2020, xlab="predicted draws of Biden win margin (% pts)\nfrom 10,000 binomial process simulations", xlim=c(2, 7.5))
+ft<- flextable(state_predictions_df_og) %>% 
+  add_header_lines("2020 Voter Turnout For Each Party By State") %>% 
+  font(fontname = "Garamond", part = "all") %>% 
+  fontsize(i = NULL, j = NULL, size = 14, part = "header") %>% 
+  align(align = "center", part = "all") %>% 
+  width(width = 1.5)
+ft <- color(ft, i = ~ (`Democrats Turnout`> `Republican Turnout`), color = "Blue", j = 2 )
+ft <- color(ft, i = ~ (`Democrats Turnout` < `Republican Turnout`), color = "Red", j = 3 )
 
-#####------------------------------------------------------#
-##### Advertising effects: A hypothetical air war in PA ####
-#####------------------------------------------------------#
-
-## how much 1000 GRP buys in % votes + how much it costs
-GRP1000.buy_fx.huber     <- 7.5
-GRP1000.buy_fx.huber_se  <- 2.5
-GRP1000.buy_fx.gerber    <- 5
-GRP1000.buy_fx.gerber_se <- 1.5
-GRP1000.price            <- 300
-
-## Suppose current (at-the-time) 538 polls were the *literal* individual
-## probabilities that each voter turns out to vote blue/red
-sim_Dvotes_PA_2020 <- rbinom(n = 10000, size = VEP_PA_2020, prob = 0.49)
-sim_Rvotes_PA_2020 <- rbinom(n = 10000, size = VEP_PA_2020, prob = 0.42)
-sim_elxns_PA_2020 <- (sim_Dvotes_PA_2020-sim_Rvotes_PA_2020)/(sim_Dvotes_PA_2020+sim_Rvotes_PA_2020)*100
-hist(sim_elxns_PA_2020, xlab="", main="predicted Biden win margin (%) distribution", ylab="", cex.lab=0.5, 
-     cex.axis=0.5, cex=0.5, cex.main=0.4, xaxs="i", yaxs="i", yaxt="n", bty="n", breaks=100)
-
-
-## How much $ for Trump to get ~2% win margin?
-## --> Trump needs to gain 10% 
-((10/GRP1000.buy_fx.huber) * GRP1000.price * 1000)  ## price according to Huber et al
-((10/GRP1000.buy_fx.gerber) * GRP1000.price * 1000) ## price according to Gerber et al
-
-sim_elxns_PA_2020_shift.b <- sim_elxns_PA_2020 - rnorm(10000, 10, GRP1000.buy_fx.huber_se) ## shift from that buy according to Huber et al
-sim_elxns_PA_2020_shift.a <- sim_elxns_PA_2020 - rnorm(10000, 10, GRP1000.buy_fx.gerber_se) ## shift from that buy according to Huber et al
-
-
-## How much $ for Trump to get ~12% win margin?
-## --> Trump needs to gain 20%
-## --> double the estimates from above
-par(mfrow=c(1,2))
-{
-  hist(sim_elxns_PA_2020_shift.a, xlab="", 
-       main="predicted Biden win margin (%) distribution\n - Gerber et al's estimated effect of 2000 Trump GRPs", 
-       ylab="", cex.lab=0.5, cex.axis=0.5, cex=0.5, cex.main=0.4, xaxs="i", yaxs="i", yaxt="n", bty="n", 
-       breaks=100, xlim=c(-10, 5))
-  hist(sim_elxns_PA_2020_shift.b, xlab="", 
-       main="predicted Biden win margin (%) distribution\n - Huber et al's estimated effect of 1333 Trump GRPs", 
-       ylab="", cex.lab=0.5, cex.axis=0.5, cex=0.5, cex.main=0.4, xaxs="i", yaxs="i", yaxt="n", bty="n", 
-       breaks=100, xlim=c(-10, 5))
-}
-
-### NOTE:
-### if GRPs have diminishing returns, then this is only true 
-### if Trump didn't spend more than 6500 GRPs (according to Huber et al.)
+ft
+save_as_image(x = ft, path = "VoterTurnout2020.png")
 

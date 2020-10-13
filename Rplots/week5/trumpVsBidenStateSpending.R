@@ -68,7 +68,8 @@ AllAds %>%
   blogGraphics_theme +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(),)
+        axis.ticks.x=element_blank(),
+        axis.line.x.bottom    = element_line(colour = "black"))
   
 
 ggsave("statespending_sqrt.png", height = 7, width = 8)

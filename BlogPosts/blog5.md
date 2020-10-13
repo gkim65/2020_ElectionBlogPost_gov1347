@@ -35,41 +35,31 @@ Now lets look at the amount of money campaigns spend on ads at each individual s
 ![](../Rplots/week5/statespending_sqrt.png)
 [Figure 3: Campaign Ad Spending at the State Level ](../Rplots/week5/statespending_sqrt.png)
 
+*The y axes on this graph was scaled using the scale_y_sqrt function to better represent the states with lower amounts of spending in Figure 3*
+
 According to Figure 3, the 2020 candidates seem to be focusing large portions of their campaign ad spending on Virginia, Georgia, DC, New York, Massachusetts, Nebraska, Pennsylvania, New Jersey, Texas, and Florida. Many of these states are swing states, but some states like California and New York seem to have high levels of campaign ad spending due to large state populations. Trump seems to have concentrated a large portion of his campaign spending in Virginia, compared to Biden who has large portions of campaign ads focused in **Georgia**, Nebraska, Pennsylvania, New York, and California. 
 
-## Economy and Challengers
+## State Level Predictions based on Ad Spending
 
-Running this same procedure with the challengers data we have compared to the economic variables, we don't seem to identify any specific variables that could be accurate in predicting the popular vote for a challenger (Figure 4). 
+With all of this information, I then decided to use a binomial logistic regression model for each state to predict how likely each of the candidates would win the popular vote and therefore the electoral college votes in the 2020 election. The model that I used for each party was the following R code: 
 
-![](../Rplots/week4/Coefficients_Challenger.png)
-[Figure 4: Coefficient Challenger](../Rplots/week4/Coefficients_Challenger.png)
-
-None of the t values were over 2, and the only pvalues that were less than 0.05 were GDP_growth_qr and GDP_growth_yr. Unfortunately, we aren't able to get very significant conclusions from this analysis, so we will not be able to predict the percentages of the challenger using this model. However, we will use the three variables identified in the incumbency analysis with economy to see possible predictions for this year's election with Trump.
-
-### Predictions?
-
-Now using the variables we found through the economy and incumbency analysis, we can run a multivariate regression model analysis to see the interactions of these various economy variables together. The following regression analysis was run:
 ```markdown
-  incumbent_mod <- lm(pv2p ~ GDP_growth_qt +
-                         GDP_growth_yr + 
-                         RDI_growth +
-                         GDP_growth_qt*GDP_growth_yr*RDI_growth, 
-                    data = dat_incumbent)
-```
-Where the interactions between GDP_growth_qt, GDP_growth_yr, and RDI_growth were specifically observed. With this model, we have some interesting estimates of Trump's popular vote predictions for this 2020 election.
+  state_R_ads_glm <- glm(cbind(R, VEP-R) ~ avg_poll+total_cost, state_R, family = binomial)
+  state_D_ads_glm <- glm(cbind(D, VEP-D) ~ avg_poll+total_cost, state_D, family = binomial)
 
-When using 2020 quarter 1 economy data, we get the following result:
-```markdown
-      fit      lwr      upr
-  61.4618 43.83936 79.08424
 ```
-This seems like a pretty high estimate: 61% of the popular vote, but when we compare this to the 2020 quarter 2 economy data we get an even more unrealistic result:
-```markdown
-        fit       lwr      upr
-  -395.0764 -2037.667 1247.515
-```
-Again, this is popular vote estimates of Trump at -395% which indicates that this model most likely is not the most accurate in determining the popular vote percentages of Trump in the 2020 election. It seems like when we combine the interactions of the three variables we selected, the effect of each variable magnifies in the same direction which provides us these unrealistic results. We definitely should take this into consideration in the future.
+This was iterated over every single state, where the model took into consideration historical polling averages and total campaign advertisement spendings for the years between 1980-2020. Some of these years did not have data for total campaign advertisement spendings, so each data point in that situation took **$0** as the total campaign advertisment expenditures for that year. With this binomial logistic regression model, I was also able to set limits for the voter eligible population and actually predict what percentage of the constituents would come out to vote for either party candidate. The only state that I was not able to conduct this model for was Vermont, which did not have data on both datasets I looked over. In addition, California was a outlier in that both candidates spent an incredible increased amount of money in that state for campaign ads, which flawed the model.
 
-[^1]: Brown, A. R. (2014).Voters Don’t Care Much About Incumbency. Journal of Experimental Political Science, 1(2):132–143
+The specific probabilities of whether voters would come out to vote for the two candidates are shown in the table below.
 
-[^2]: Campbell et al., 2017] Campbell, J. E., Norpoth, H., Abramowitz, A. I., Lewis-Beck, M. S.,Tien, C., Campbell, J. E., Erikson, R. S., Wlezien, C., Lockerbie, B., Holbrook, T. M.,and et al. (2017).A Recap of the 2016 Election Forecasts.PS: Political Science andPolitics, 50(2):331–338.
+![](../Rplots/week5/VoterTurnout2020.png)
+[Figure 4: Voter Turnout 2020](../Rplots/week5/VoterTurnout2020.png)
+
+### Sooo Who wins the Electoral College?
+
+Using these win percentages, lets look over who would win each state in the electoral college! *(Disclaimer: California was made blue because of historical patterns of having voted for the democrats, and vermont was excluded because of lack of data)*
+
+![](../Rplots/week5/2020AdPrediction.png)
+[Figure 5: Electoral College Ad Spending Map ](../Rplots/week5/2020AdPrediction.png)
+
+Looking at this map, Biden has a clear lead over Trump, with Biden winning 340 delegates while Trump only has 192 delegates. This does seem like a very high estimate for electoral college delegates voting for Biden, but the model based this on poll averages and campaign ad spending numbers (which Biden is both leading in). We'll need to see on actual election night whether or not this becomes true!
