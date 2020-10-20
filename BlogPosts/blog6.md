@@ -18,9 +18,10 @@ When plotting the various demographic trends within US state boundaries, there s
 ![](../Rplots/week6/demographics.png)
 [Figure 1: Demographics for US population by State](../Rplots/week6/demographics.png)
 
+For a more holistic view of the entire US population, we can check different demographic percentages of each Race through the pie chart below in Figure 2.
 
-![](../Rplots/week5/JoeVSDonald.png)
-[Figure 2: Campaign Ad Spending 2020 Election VS. 2020 Polling Averages ](../Rplots/week5/JoeVSDonald.png)
+![](../Rplots/week6/demographics_2019.png)
+[Figure 2: 2019 United States Demographics Census Estimates ](../Rplots/week6/demographics_2019.png)
 *The ad spending data for this plot was provided from https://www.fec.gov/data/*
 
 
