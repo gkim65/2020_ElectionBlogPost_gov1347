@@ -18,18 +18,29 @@ When plotting the various demographic trends within US state boundaries, there s
 ![](../Rplots/week6/demographics.png)
 [Figure 1: Demographics for US population by State](../Rplots/week6/demographics.png)
 
-For a more holistic view of the entire US population, we can check different demographic percentages of each Race through the pie chart below in Figure 2.
+Most states have seen decreases within levels of white populations, and increases in minority groups over this time period; this does exhibit possibiltiies of a minority majority in future years as we enter 2020 and beyond. 
+
+For a more holistic view of the entire US population, we can check different demographic percentages of each Race through the pie chart below in Figure 2. There still is a majority of white individuals within the US, with Hispanic and Black populations following after.
 
 ![](../Rplots/week6/demographics_2019.png)
 [Figure 2: 2019 United States Demographics Census Estimates ](../Rplots/week6/demographics_2019.png)
-*The ad spending data for this plot was provided from https://www.fec.gov/data/*
+*The ad spending data for this plot was provided from https://data.census.gov/cedsci/all?q=demographics*
+
+With information on the composition of the United States' different racial groups, we can correlate the relationships of the growth in different ethnic populations with increases for each party's eventual popular vote percentages. 
+
+### Demographic Relations between Party
+
+Now lets model the relationship between different US demographic populations with each party's popular vote percentages. After some initial exploration of various demographic variables influence on the popular vote correlations of each party, we can choose specific variables that have the highest levels of correlation with each party. Some demographic variables had minimal impacts on the actual model of the popular vote with each party, but each party did have specific demographic variables with high correlations for their popular vote percentages. 
+
+Lets first view the democratic party relationships:
+
+![](../Rplots/week6/demographicChangeEffects_Dem.png)
+[Figure 3: Dem ](../Rplots/week6/demographicChangeEffects_Dem.png)
 
 
-### Biden VS Trump State level spending
 
-
-![](../Rplots/week5/statespending_sqrt.png)
-[Figure 3: Campaign Ad Spending at the State Level ](../Rplots/week5/statespending_sqrt.png)
+![](../Rplots/week6/demographicChangeEffects_Rep.png)
+[Figure 3: US populations](../Rplots/week6/demographicChangeEffects_Rep.png)
 
 ## State Level Predictions based on Ad Spending
 
