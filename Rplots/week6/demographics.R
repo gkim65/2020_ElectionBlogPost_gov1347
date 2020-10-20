@@ -180,3 +180,26 @@ plot_1 <- his1 %>%
 
 plot_grid(plot_1,plot_original)
 ggsave("demographics_electoralCollegeMap.png", height = 5, width = 12)
+
+
+
+his_original$state <- state.name[match(his_original$state, state.abb)]
+his1$state <- state.name[match(his1$state, state.abb)]
+
+## Electoral college numbers
+electoralCollege <- read.csv("Data/ElectoralCollegePost1948.csv")
+electoralCollege %>% select(X,X2020) %>% 
+  filter(!is.na(X2020)) %>% 
+  mutate(state = X) %>% 
+  left_join(his_original) %>%
+  mutate(win = ifelse(pred > 50, "D","R")) %>%  
+  group_by(win) %>% 
+  summarize(X2020 = sum(X2020))
+
+electoralCollege %>% select(X,X2020) %>% 
+  filter(!is.na(X2020)) %>% 
+  mutate(state = X) %>% 
+  left_join(his1) %>%
+  mutate(win = ifelse(pred > 50, "D","R")) %>%  
+  group_by(win) %>% 
+  summarize(X2020 = sum(X2020))
