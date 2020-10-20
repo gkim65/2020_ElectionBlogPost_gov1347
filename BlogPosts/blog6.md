@@ -32,14 +32,14 @@ Now lets model the relationship between different US demographic populations wit
 
 Lets first view the democratic party relationships:
 
-![](../Rplots/week6/demographicChangeEffects_Dem.png)
+<img src="../Rplots/week6/demographicChangeEffects_Dem.png" width="350">
 [Figure 3: Demographic Variables with highest correlations with Democrats  ](../Rplots/week6/demographicChangeEffects_Dem.png)
 
 There seems to be high correlations with increases in the Black and Female populations with the Democratic Party's popular vote populations. With a one percent increase within the Black population, the model exhibits a **5.695** increase in the democratic population. In addition, a one percent increase within the Female population, there is an even bigger vote percentage increase of **7.014** percent. These two voting blocs have consistently been important supporting grounds for the democratic party candidates in 2008 and 2012 with Obama's election, and I predict that the level of turnout of these groups for Biden will be a large factor in whether or not he wins several key states against Trump within the electoral college.
 
 Now lets compare that with the republican party.
 
-![](../Rplots/week6/demographicChangeEffects_Rep.png)
+<img src="../Rplots/week6/demographicChangeEffects_Rep.png" width="350">
 [Figure 4: Demographic Variables with highest correlations with Republicans](../Rplots/week6/demographicChangeEffects_Rep.png)
 
 Specific demographic populations that had the heighest correlations with the republican party candidate popular vote percentages included White voters, Male voters, and populations between the ages of 45-65. The highest percentage increase in the republican popular vote was with the Male population of a 1 percent increase in the population correlating to a **6.642** percent increase in the Republican Party's popular vote!
@@ -54,9 +54,14 @@ Now applying these models onto the electoral college, I wanted to test a hypothe
 The hypothetical situation is on the left, and the historical trend is on the right. Just with this 1% increase on both voting blocs, there is a stark difference with the number of states that come over to the democrats, with key states such as Michigan, Florida, and Ohio. Specific Electoral College numbers can be found below:
 
 *Historical Situation:*
+
 Biden Electoral Votes: 252
+
 Trump Electoral Votes: 283
 
+
 *Hypothetical Situation:*
+
 Biden Electoral Votes: 361
+
 Trump Electoral Votes: 174
