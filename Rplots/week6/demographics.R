@@ -5,6 +5,7 @@ library("reshape2")
 library(extrafont)
 library(stargazer)
 library(geofacet)
+library(cowplot)
 loadfonts(device = "win")
 
 #####------------------------------------------------------#
@@ -113,3 +114,69 @@ stargazer(mod_demog_change_R, header=FALSE, type='html', no.space = TRUE,
           keep = c(1:6, 62:66), omit.table.layout = "sn",
           title = "The electoral effects of demographic change (across states)",out = "forcastR.htm")
 
+### Prediction of maps
+
+# new data for 2020
+demog_2020 <- subset(demog, year == 2018)
+demog_2020 <- as.data.frame(demog_2020)
+rownames(demog_2020) <- demog_2020$state
+demog_2020 <- demog_2020[state.abb, ]
+
+demog_2020_change <- demog %>%
+  filter(year %in% c(2016, 2018)) %>%
+  group_by(state) %>%
+  mutate(Asian_change = Asian - lag(Asian, order_by = year),
+         Black_change = Black - lag(Black, order_by = year),
+         Hispanic_change = Hispanic - lag(Hispanic, order_by = year),
+         Indigenous_change = Indigenous - lag(Indigenous, order_by = year),
+         White_change = White - lag(White, order_by = year),
+         Female_change = Female - lag(Female, order_by = year),
+         Male_change = Male - lag(Male, order_by = year),
+         age20_change = age20 - lag(age20, order_by = year),
+         age3045_change = age3045 - lag(age3045, order_by = year),
+         age4565_change = age4565 - lag(age4565, order_by = year),
+         age65_change = age65 - lag(age65, order_by = year)
+  ) %>%
+  filter(year == 2018)
+demog_2020_change <- as.data.frame(demog_2020_change)
+rownames(demog_2020_change) <- demog_2020_change$state
+demog_2020_change <- demog_2020_change[state.abb, ]
+
+# prediction
+predict(mod_demog_change_D, newdata = demog_2020_change) + # original model (mod_demog_change) parameters with new data for 2020 which predicts double hispanic vote turnout - Latino surge 
+  (1.28-0.64)*demog_2020$Hispanic
+his_original <- tibble(predict(mod_demog_change, newdata = demog_2020_change), state = state.abb, pred = `predict(mod_demog_change, newdata = demog_2020_change)`)
+his1 <- tibble(predict(mod_demog_change, 
+                       newdata = demog_2020_change) + 
+                 (5.6946*0.01)*demog_2020$Black + (7.0143*0.01)*demog_2020$Female, 
+               state = state.abb, pred = `+...`)
+plot_original <- his_original %>%  ##`statebins` needs state to be character, not factor!
+  mutate(state = as.character(state)) %>%
+  ggplot(aes(state = state, fill = (pred >= 50))) +
+  geom_statebins(lbl_size = 5, dark_lbl = "white", light_lbl = "black") +
+  theme_statebins(base_family = "Garamond") +
+  labs(title = "2020 Presidential Election Prediction",
+       subtitle = "Historical demographic change effect, no predicted change in voter demographics",
+       fill = "") +
+  theme(legend.position = "none") +
+  theme(text = element_text(family = "Garamond"),
+        plot.title = element_text(size = 20),
+        plot.subtitle = element_text(size = 10))
+  
+
+plot_1 <- his1 %>% 
+  mutate(state = as.character(state)) %>% ##`statebins` needs state to be character, not factor!
+  ggplot(aes(state = state, fill = (pred >= 50))) +
+  geom_statebins(lbl_size = 5, dark_lbl = "white", light_lbl = "black") +
+  theme_statebins(base_family = "Garamond") +
+  labs(title = "2020 Presidential Election Prediction",
+       subtitle = "Hypothetical Black and Female voters 1% demographic increases",
+       fill = "") +
+  theme(legend.position = "none")+
+  theme(text = element_text(family = "Garamond"),
+        plot.title = element_text(size = 20),
+        plot.subtitle = element_text(size = 10))
+  
+
+plot_grid(plot_1,plot_original)
+ggsave("demographics_electoralCollegeMap.png", height = 5, width = 12)

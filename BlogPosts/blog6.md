@@ -1,26 +1,24 @@
-# Blog 6: The Ground Game
+# Blog 6: Demographics / The Ground Game
 ## 10/19/20
 
-### The Ground Game
+### The Ground Game Discussion for 2020
 
-Following our analysis of campaigns itself, we will now be taking a look at each campaign's Ground Game efforts within the 2020 election. This can be in many forms, such as field offices, door to door volunteer knocks, text/phone banks, personal letters to voters, and more!
+Following our analysis of campaigns, another important factor to consider would be the ground game efforts made by campaigns; or the lack thereof within the 2020 election. Typically, the ground game comes in many forms, such as field offices, door to door volunteer knocks, text/phone banks, personal letters to voters, and more. However, for this 2020 election, there seems to be a drastic decrease in ground game activity, specifically on Biden's campaign trail, due to the Covid-19 pandemic. Many of his campaign efforts have switched to the air war and mass social media with minimal gatherings with voters. Trump still seems to carry out many of his campaign rallies even after being diagnosed with Covid himself, but his ground game efforts definitely have decreased as well compared to the 2016 election.
 
-There are clearly many ways that candidates can reach out to voters. But which are most effective? Have campaigns been effectively using their resources to reach out to voters? How has the pandemic affected some of these candidate to voter interactions?
-
-With these explorations, we will try to predict voter turnout rates based on current trends of early voting and ground game efforts from each candidate to bring out their supporters to the polls. However, I also do want to take some time to explore voting blocs and specific correlations demographics will have in this year's presidential election!
+Due to the lack of datasets I could find specific to the ground game efforts of both candidates, I decided to change my focus to explore voting blocs and specific correlations within US demographics in this year's presidential election.
 
 So, lets get on with it.
 
 ## Demographics By State
 
-When plotting the various demographic trends within US state boundaries, there seems to be diverse waves of increase and decreases in populations for most ethnic groups within the US. In order to view this properly state by state, you can track the demographic trends from 1990 to 2018 for all 50 states below in Figure 1.
+When plotting the various demographic trends within US state boundaries, there seems to be diverse waves of increases and decreases in populations for most ethnic groups within the US. In order to view this properly state by state, you can track the demographic trends from 1990 to 2018 for all 50 states below in Figure 1.
 
 ![](../Rplots/week6/demographics.png)
 [Figure 1: Demographics for US population by State](../Rplots/week6/demographics.png)
 
 Most states have seen decreases within levels of white populations, and increases in minority groups over this time period; this does exhibit possibiltiies of a minority majority in future years as we enter 2020 and beyond. 
 
-For a more holistic view of the entire US population, we can check different demographic percentages of each Race through the pie chart below in Figure 2. There still is a majority of white individuals within the US, with Hispanic and Black populations following after.
+For a more holistic view of the entire US population, we can check different demographic percentages of each race through the pie chart below in Figure 2. There still is a majority of white individuals within the US, with Hispanic and Black populations following after.
 
 ![](../Rplots/week6/demographics_2019.png)
 [Figure 2: 2019 United States Demographics Census Estimates ](../Rplots/week6/demographics_2019.png)
@@ -46,21 +44,19 @@ Now lets compare that with the republican party.
 
 Specific demographic populations that had the heighest correlations with the republican party candidate popular vote percentages included White voters, Male voters, and populations between the ages of 45-65. The highest percentage increase in the republican popular vote was with the Male population of a 1 percent increase in the population correlating to a **6.642** percent increase in the Republican Party's popular vote!
 
-The impacts of the turnout of these populations within the election will be crucial to predict who wins in this election. Now lets discuss a bit of Ground Game tactics used by the campaigns within the 2020 election to determine turnout. 
+## State Level Predictions with hypothetical changes in demographic vote
 
-## State Level Predictions based on Ad Spending
+Now applying these models onto the electoral college, I wanted to test a hypothetical (but very possible situation) of a 1% increase in both the Black and Female voting populations for this election. Especially with the issues at stake with this 2020 election, many election analysts have predicted higher voting rates within those two populations, so I wanted to try testing the possible consequences with a small increase in those two populations. The result is shown in Figure 5 below.
 
+![](../Rplots/week6/demographics_electoralCollegeMap.png)
+[Figure 5: Electoral College Demographic Changes Map ](../Rplots/week6/demographics_electoralCollegeMap.png)
 
-```markdown
-  state_R_ads_glm <- glm(cbind(R, VEP-R) ~ avg_poll+total_cost, state_R, family = binomial)
-  state_D_ads_glm <- glm(cbind(D, VEP-D) ~ avg_poll+total_cost, state_D, family = binomial)
+The hypothetical situation is on the left, and the historical trend is on the right. Just with this 1% increase on both voting blocs, there is a stark difference with the number of states that come over to the democrats, with key states such as Michigan, Florida, and Ohio. Specific Electoral College numbers can be found below:
 
-```
-![](../Rplots/week5/VoterTurnout2020.png)
-[Figure 4: Voter Turnout 2020](../Rplots/week5/VoterTurnout2020.png)
+*Historical Situation:*
+Biden Electoral Votes: 252
+Trump Electoral Votes: 283
 
-### Sooo Who wins the Electoral College?
-
-![](../Rplots/week5/2020AdPrediction.png)
-[Figure 5: Electoral College Ad Spending Map ](../Rplots/week5/2020AdPrediction.png)
-
+*Hypothetical Situation:*
+Biden Electoral Votes: 361
+Trump Electoral Votes: 174
