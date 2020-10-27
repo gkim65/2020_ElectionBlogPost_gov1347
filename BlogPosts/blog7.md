@@ -32,7 +32,7 @@ We can clearly see the inverse relationship between covid deaths and Trump's pol
 ## More types of Covid Data
 
 Using data from the Covid Tracking Project (hosted from the Atlantic), I first plotted through several scatterplots Trump's polling averages in comparison to the following Covid statistics provided from the Covid Tracking Project:
-- # of deaths
+- Number of deaths
 - death increase
 - cumulative hospitalized individuals
 - and 14 others...
@@ -46,7 +46,7 @@ Many of these graphs have similar trends with each other, most notably number of
 
 There seemed to be mostly negative trends within this plot, so I tried to create a model with the most variables (with minimal overlap in terms of data) that could try to explain the polling results for Trump. I chose these 8 variables:
 
-- # of Deaths
+- Number of Deaths
 - currently on ventilator
 - increases in positive tests
 - increases in total tests
