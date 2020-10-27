@@ -3,10 +3,9 @@
 
 ### Shocks during the Election
 
-Now with only 8 days left before election day, our final topic to discuss is shocks during election years and how much they affect voter's choices on the ballot.
+Now with only 8 days left before election day, we have reached our final topic to discuss: shocks during election years and how much they affect voters' choices on the ballot.
 
-Apolitical shocks have been attributed to voter attitude shifts during election years, ranging from natural disasters, shark attacks, sports, lotteries, and more. These shocks can have both positive and negative impacts on candidates, but most of these impacts are concentrated on the incumbent candidates or party during election years. Although some of these shocks may seem be irrational in how voters punish or reward governmental officials, like shark attacks causing less voters to vote for incumbent candidates, there are many cases when voters consider shocks rationally in their vote.
-Voters usually consider what the government could have done better within the seemingly "apolitical" shock and they consider how the nation is doing in comparison to other countries globally.
+Apolitical shocks have been attributed to voter attitude shifts during election years, ranging from natural disasters, shark attacks, sports, lotteries, and more. These shocks can have both positive and negative impacts on candidates, but most of these impacts are concentrated on the incumbent candidates or party during election years. Some of these shocks may seem irrational in how voters punish or reward governmental officials, like shark attacks linked with less voter support for incumbent candidates. However, there are still many cases when voters consider shocks rationally in their vote. Voters usually consider what the government could have done better within the seemingly "apolitical" shock and they consider how the nation is doing in comparison to other countries globally.
 
 All of this seems incredibly applicable for the situation in 2020. For the largest shock none of us could have predicted for 2020: how has Covid-19 affected voters for the 2020 election?
 

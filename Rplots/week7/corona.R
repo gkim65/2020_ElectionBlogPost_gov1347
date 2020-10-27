@@ -1,4 +1,4 @@
-#### Poll Model ####
+#### Covid Model ####
 #### Gov 1347: Election Analysis (2020)
 #### Grace Kim
 
@@ -110,9 +110,9 @@ Corona_poll_2020_df %>%
 
 ggsave("Donald_CovidPositives.png", height = 5, width = 8)
 
+## Facet graph for Covid variables VS trump polling averages
 Corona_poll_2020_df <- corona_df %>% 
   inner_join(poll_2020_df %>% filter(candidate_name == "Donald Trump"), by = c("date"="date"))
-
 
 facet_covid = c("death", 
                 "deathIncrease", 
@@ -149,7 +149,7 @@ Facet_corona %>%
 ggsave("CovidVsTrump_models.png", height = 10, width = 12)
 
 #####------------------------------------------------------#
-#####  Model Polls 2020 ####
+#####  Models for Covid 2020 ####
 #####------------------------------------------------------#
 
 mod_covid <- lm(avg_support ~ death + onVentilatorCurrently + positiveIncrease +
@@ -168,7 +168,6 @@ stargazer(mod_covid_deaths, header=FALSE, type='html', no.space = TRUE,
           keep = c(1:8, 62:66), omit.table.layout = "sn",
           title = "Covid Death Model Against Trump's 2020 Poll Averages",out = "forcast_covidDeath.htm")
 
-covid_2020_change<- 232957.8
 covid_2020_change <- head(Corona_poll_2020_df, 1)
 ## expected covid death rate on election day
 covid_2020_change$death <- 232957.8
