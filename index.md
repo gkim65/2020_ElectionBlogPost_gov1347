@@ -6,5 +6,6 @@
 ## [Week 5: Air War (10.12.20) ](BlogPosts/blog5.md)
 ## [Week 6: Demographics / Ground Game (10.19.20) ](BlogPosts/blog6.md)
 ## [Week 7: Shocks - Coronavirus (10.26.20) ](BlogPosts/blog7.md)
+## [Week 8: Final Predictions (11.1.20) ](BlogPosts/blog8.md)
 
 
