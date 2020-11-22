@@ -1,12 +1,12 @@
 ## CORRECTION: Election Map
 
-I realized that I had made a small coding mistake that had a drastic effect on my final election prediction results. I accidentally used the republican party's polling data when predicting the democratic party's state level popular vote percentages, which can be seen in line 232 of the [r code in my week 8 blog post](https://github.com/gkim65/2020_ElectionBlogPost_gov1347/blob/gh-pages/Rplots/week8/safeStates.R)
+I realized that I had made a small coding mistake that had a drastic effect on my final election prediction results. I accidentally used the republican party's polling data when predicting the democratic party's state level popular vote percentages, which can be seen in line 232 of the [R code in my week 8 blog post](https://github.com/gkim65/2020_ElectionBlogPost_gov1347/blob/gh-pages/Rplots/week8/safeStates.R).
 
 Fixing this error, I was left with the true intended results of my prediction: 
 ![](../Rplots/week9/REALPredictionsWinsElectoralCollege2020.png)
 [Fixed Electoral College Map Predictions ](../Rplots/week9/REALPredictionsWinsElectoralCollege2020.png)
 
-[Fixed Election Popular Vote Margin Predictions ](../Rplots/week9/Final PredictionsTable.png.png)
+[Fixed Election Popular Vote Margin Predictions ](../Rplots/week9/Final PredictionsTable.png)
 
 Please use this electoral prediction map instead of the map listed further below this blog post.
 

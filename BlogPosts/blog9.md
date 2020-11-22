@@ -5,7 +5,7 @@
 
 Finally, the results are in. *Drum-roll please...* 
 
-Congratulations to **Joe Biden** who officially is now our **46th President Elect of the United States!** It was exciting to follow the progress of this election for the past 10 weeks, especially as it was the first election I could truly participate in as a voter! Now, politics aside of how you feel about the election result itself, lets start our post election reflection of how our model fared with the actual election results!
+Congratulations to **Joe Biden** who officially is now our **46th President Elect of the United States!** It was exciting to follow the progress of this election for the past 10 weeks, especially as it was the first election I could truly participate in as a voter! Now, politics aside of how you feel about the election result itself, lets start our post election reflection of how well our model predictions fared with the actual election!
 
 ## Model Recap
 
@@ -19,7 +19,7 @@ We had two separate models; one polling model for the "safe" states and one ense
 
 #### "Safe" States
 
-States were deemed to be "safe" if the polling model correctly predicted the winner for at least 10 elections out of 11 from the years 1976-2016 from out of sample testing. 
+States were deemed to be "safe" if my polling model correctly predicted, in out of sample testing, the winner for at least 10 out of 11 elections from the years 1976-2016. 
 
 Predictions for these these safe states were made using the same polling election data between the years 1976-2016, where the dependent variable: **state wide popular vote percentage**, was determined in a binomial regression using the independent variable: **polling averages 1 week from the election**. To see what the 2020 popular vote percentages and win margin predictions were for these 17 states, please visit the appendix here: [Popular Vote Predictions Safe States](appendix9.md). The appendix also contains visualizations of the predicted safe states popular vote percentages on a map.
 
@@ -31,7 +31,7 @@ For the remaining states, the following ensemble model was used:
 
 The polling model is identical to the binomial regression polling model we used for our safe states. However, I found that some states (Illinois, Nebraska, Rhode Island, South Dakota, Wyoming) did not have recent statewide polls that I could use; for these states, the most recent national polling data was used for the ensemble calculations. These values were 52.0 for Biden, and 43.4 for Trump.
 
-The economy model was a binomal regression using third quarter **GDP yearly growth** as the independent variable. Although it was did not have as high of an out of sample testing accuracy rate as the polling model, I wanted to best incorporate this fundamental variable to better represent the current state of the 2020 election. More specific descriptions of the economy model can be found at this link: [Week 8: Final Predictions (11.1.20) ](BlogPosts/blog8.md).
+The economy model was a binomal regression using third quarter **GDP yearly growth** as the independent variable. Although it was did not have as high of an out of sample testing accuracy rate as the polling model, I wanted to incorporate this fundamental variable to better represent the current state of the 2020 election. More specific descriptions of the economy model can be found at this link: [Week 8: Final Predictions (11.1.20) ](BlogPosts/blog8.md).
 
 For the 2020 election, the economy model predicted a 45.27866 popular vote percentage for Trump, with a 54.72134 popular vote percentage for Biden. 
 
@@ -42,7 +42,7 @@ Using the previous ensemble and safe states models, we made our predictions for 
 ![](../Rplots/week8/WinsElectoralCollege2020.png)
 [Figure 1: Final Prediction Electoral Map ](../Rplots/week8/WinsElectoralCollege2020.png)
 
-From this electoral college map, Biden wins by a landslide with **372 electoral college votes** while Trump is left with **166 electoral college votes**. However, while writing this post election reflection blog entry I realized that I had made a small coding mistake that had a drastic effect on my final election prediction results. I accidentally used the republican party's polling data when predicting the democratic party's state level popular vote percentages, which can be seen in line 232 of the [r code in my week 8 blog post](https://github.com/gkim65/2020_ElectionBlogPost_gov1347/blob/gh-pages/Rplots/week8/safeStates.R)
+From this electoral college map, Biden wins by a landslide with **372 electoral college votes** while Trump is left with **166 electoral college votes**. However, while writing this post election reflection blog entry I realized that I had made a small coding mistake that had a drastic effect on my final election prediction results. I accidentally used the republican party's polling data when predicting the democratic party's state level popular vote percentages, which can be seen in line 232 of the [R code in my week 8 blog post](https://github.com/gkim65/2020_ElectionBlogPost_gov1347/blob/gh-pages/Rplots/week8/safeStates.R).
 
 Fixing this error, I was left with the true intended results of my prediction:
 ![](../Rplots/week9/REALPredictionsWinsElectoralCollege2020.png)
@@ -59,7 +59,7 @@ For testing my model accuracy, I will be using the error corrected model (that u
 ![](../Rplots/week9/MarginOfErrorMap.png)
 [Figure 3: Margin of Error Map](../Rplots/week9/MarginOfErrorMap.png)
 
-Exploring this map, it is apparent that many of the midwest states had trends of overshooting how much of the popular vote Biden would recieve. This did not come as too much of a surprise to me, seeing how pollsters were not able to accurately reflect much of the midwest vote in the 2016 election. However, I was surprised at how much my model seemed to overpredict Trump's wins in the south as well as some west coast states. Many states in this election were won by a relatively smaller margin than in previous years, which stands to show how close this election really was.
+Exploring this map, it is apparent that my model overshot how much of the popular vote Biden would receive in many of the midwest states. This did not come as much of a surprise to me, seeing how pollsters were not able to accurately reflect much of the midwest vote in the 2016 election. However, I was surprised at how much my model seemed to overpredict Trump's wins in the south as well as some west coast states. Many states in this election were won by a relatively smaller margin than in previous years, which stands to show how close this election really was.
 
 To explore this further, I put my popular vote prediction percentage against the true 2020 election voting results in the following graph: 
 
@@ -74,7 +74,7 @@ Despite some over and under predictions, my model seems to be a much more reliab
 
 One area that could have created these inaccuracies within my model is the economy. Due to how unique the economic decline was for 2020 from the pandemic, it seems to be a less reliable factor to describe how the current political state is within the US. In addition, despite GDP growth having reached an all time low, many voters in the US seem to not attribute this economic decline as fault to the current sitting president. Looking at these changes in voter attitude, the economy may develop over time to become a less predictive factor of future presidential elections.
 
-Another area I would like to examine more is finding ways to properly include turnout probabilities for various demographic populations in the US. Having only used raw polling data for my inital models, I believe my predictions did not dive deeply to the details and intricacies of predicted turnout for various racial and ethnic groups. For example, Georgia had a very high turnout rate of black voters which gave the state the tiny push it needed in order to turn blue to Biden rather than stay a red state. Being able to predict and take into account which voter populations will have higher turnouts in future elections definitely would reduce many of the inaccuracies we see from relying solely on high level polling data.
+Another area I would like to examine more is finding ways to properly include turnout probabilities for various demographic populations in the US. Having only used raw polling data for my inital models, I believe my predictions did not dive deeply to the details and intricacies of predicted turnout for various racial and ethnic groups. For example, Georgia had a very high turnout rate fpr black voters which gave the state the push it needed to turn blue for Biden rather than stay a red state. Being able to predict and take into account which voter populations will have higher turnouts in future elections definitely would reduce many of the inaccuracies we see from relying solely on high level polling data.
 
 ### Tests for Model Inaccuracy Hypotheses
 
