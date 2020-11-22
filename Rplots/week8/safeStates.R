@@ -185,6 +185,7 @@ save_as_image(x = ft, path = "SafeStatesPollModelTable.png")
 ### Simulations!!!
 vep_df <- read_csv("Data/vep_1980-2020.csv") %>% 
   filter(year == 2020)
+
 covid_deaths <- read_csv("Data/Provisional_COVID-19_Death_Counts_in_the_United_States_by_County.csv") %>% 
   clean_names()
 covid_deaths <- covid_deaths %>% 
@@ -256,6 +257,39 @@ Predictions_map <- do.call(rbind, Polling_Predictions)
 (sum(Predictions_map[5]))/(sum(Predictions_map[3]) + sum(Predictions_map[5]))
 
 Predictions_map <- Predictions_map %>% select(win_margin,state) %>% mutate(win = ifelse(win_margin > 0, "D", "R"))
+
+Predictions_map
+
+popvote_2020_states <- read_csv("Data/popvote_bystate_1948-2020.csv")
+
+offmargins <- popvote_2020_states %>% 
+  filter(year == 2020) %>% 
+  mutate(win_margins2020 = (D_pv2p-R_pv2p)*100) %>% 
+  left_join(Predictions_map) %>% 
+  mutate(offMargins = win_margin-win_margins2020) %>% 
+  select(offMargins,state, win_margins2020,win_margin)
+offmargins
+plot_usmap(data = offmargins, regions = "state", values = "offMargins") +
+  scale_fill_gradient2(
+    high = "#007FFF", 
+    #mid = scales::muted("purple"), ##TODO: purple or white better?
+    mid = "white", 
+    low = "#DC143C", 
+    breaks = c(-50,-25,0,25,50), 
+    limits = c(-50,50),
+    name = "Margins Error",
+    guide = guide_colourbar(barwidth = 20, barheight = 0.4,
+                            title.position = "top"))+
+  labs(title = "Error Margins")+
+  theme_void()+
+  blogMapGraphics_theme
+
+
+
+
+
+
+
 plot_usmap(data = Predictions_map, regions = "states", values = "win") +
   scale_fill_manual(values = c("blue", "#DC143C"), name = "State Electoral College winner") +
   labs(title = "Electoral College Predicted Wins 2020",
