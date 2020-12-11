@@ -8,6 +8,7 @@
 ## [Week 7: Shocks - Coronavirus (10.26.20) ](BlogPosts/blog7.md)
 ## [Week 8: Final Predictions (11.1.20) ](BlogPosts/blog8.md)
 ## [Week 9: Post Election Model Reflection (11.19.20) ](BlogPosts/blog9.md)
+## [Week 10: Post Election Testing Narratives - Covid-19 (12.10.20) ](BlogPosts/blog10.md)
 ## [Appendix: Post Election Model Reflection (11.19.20) ](BlogPosts/appendix9.md)
 
 
